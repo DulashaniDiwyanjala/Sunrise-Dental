@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sunrise Dental Clinic — Staff dashboard</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- ======================= TOAST ======================= -->
+<div id="toastHost" class="toast-host" aria-live="polite"></div>
+<!-- ======================= APP SHELL ======================= -->
+<div id="appShell" class="app-shell" >
+
+  <aside class="sidebar">
+    <div class="sidebar-brand">
+      <svg viewBox="0 0 64 64" width="30" height="30" aria-hidden="true">
+        <circle cx="32" cy="32" r="30" fill="none" stroke="currentColor" stroke-width="2.5"/>
+        <path d="M32 16c-6 0-10 4-10 10 0 8 3 11 3 18 0 3 2 5 4 5s3-2 3-6 1-6 3-6 3 2 3 6 1 6 3 6 4-2 4-5c0-7 3-10 3-18 0-6-4-10-10-10z" fill="currentColor"/>
+      </svg>
+      <div>
+        <strong>Sunrise Dental</strong>
+        <span>Clinic Console</span>
+      </div>
+    </div>
+
+    <nav class="sidebar-nav" id="sidebarNav">
+      <button class="nav-item"><a href="staff_dashboard.html" class="nav-item active">Dashboard</a></button>
+      <button class="nav-item"><a href="staff-registerAppoinment.html" class="nav-item active">Register Appointment</a></button>
+      <button class="nav-item" data-view="register"><a href="staff-dentist.html" class="nav-item active">Dentists</a>
+      </button>
+      <button class="nav-item" data-view="register"><a href="staff-treatment.html" class="nav-item active">Treatments</a>
+      </button>
+      <button class="nav-item" data-view="all"><a href="staff-appointment.html" class="nav-item active">Appointments</a>
+      </button>
+      <button class="nav-item" data-view="help"><a href="staff-help.html" class="nav-item active">Help</a>
+
+      </button>
+    </nav>
+
+    <div class="sidebar-footer">
+      <button id="exportBtn" class="btn btn-ghost btn-small btn-block">Export records (.txt)</button>
+      <label class="btn btn-ghost btn-small btn-block file-import">
+        Import records (.txt)
+        <input type="file" id="importFile" accept=".txt,.csv" hidden>
+      </label>
+    </div>
+  </aside>
+
+  <div class="main-col">
+    <header class="topbar">
+      <div class="topbar-title" id="viewTitle">Dashboard</div>
+      <div class="topbar-right">
+        <span class="staff-chip">Signed in as <strong id="staffName">—</strong></span>
+        <button id="exitBtn" class="btn btn-danger-outline btn-small">Exit System</button>
+      </div>
+    </header>
+
+    <main class="content" id="content">
+
+      <!-- ---------- DASHBOARD ---------- -->
+      <section class="view" id="view-dashboard">
+        <div class="stat-grid">
+          <div class="stat-card">
+            <span class="stat-label">Total appointments</span>
+            <span class="stat-value" id="statTotal">0</span>
+          </div>
+          <div class="stat-card">
+            <span class="stat-label">Today's appointments</span>
+            <span class="stat-value" id="statToday">0</span>
+          </div>
+          <div class="stat-card">
+            <span class="stat-label">Registered dentists</span>
+            <span class="stat-value" id="statDentists">4</span>
+          </div>
+          <div class="stat-card accent">
+            <span class="stat-label">Est. revenue booked</span>
+            <span class="stat-value" id="statRevenue">LKR 0</span>
+          </div>
+        </div>
+
+        <div class="panel">
+          <div class="panel-head">
+            <h2>Today's schedule</h2>
+            <span class="panel-sub" id="todayDate"></span>
+          </div>
+          <div id="todayList" class="today-list"></div>
+        </div>
+
+        <div class="panel">
+          <div class="panel-head">
+            <h2>Quick actions</h2>
+          </div>
+          <div class="quick-actions">
+            <button class="btn btn-primary" data-view="register"><a href="staff-registerAppoinment.html" class="nav-item active">+ New appointment</a></button>
+            <button class="btn btn-secondary" data-view="search">Find a patient</button>
+            <button class="btn btn-secondary" data-view="billing">Generate a bill</button>
+          </div>
+        </div>
+      </section>
+
+
+      <!-- ---------- SEARCH ---------- -->
+      <section class="view" id="view-search" >
+        <div class="panel">
+          <div class="panel-head">
+            <h2>Find appointment</h2>
+          </div>
+          <form id="searchForm" class="inline-form" novalidate>
+            <label class="field field-grow">
+              <span class="field-label">Appointment number</span>
+              <input type="text" id="sApptNo" placeholder="e.g. SDC-2026-0001" class="mono">
+            </label>
+            <button type="submit" class="btn btn-primary">Search</button>
+          </form>
+          <div id="searchResult" class="search-result"></div>
+        </div>
+      </section>
+
+
+      <!-- ---------- ALL APPOINTMENTS ---------- -->
+      <section class="view" id="view-all" >
+        <div class="panel">
+          <div class="panel-head">
+            <h2>All appointments</h2>
+            <span class="panel-sub" id="allCount">0 records</span>
+          </div>
+          <div class="table-filters">
+            <input type="text" id="filterDentist" placeholder="Filter by dentist…">
+            <input type="date" id="filterDate">
+            <button id="clearFilters" class="btn btn-ghost btn-small">Clear filters</button>
+          </div>
+          <div class="table-wrap">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Appt No.</th><th>Patient</th><th>Dentist</th><th>Treatment</th><th>Date</th><th>Time</th>
+                </tr>
+              </thead>
+              <tbody id="allTableBody"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- ---------- HELP ---------- -->
+      <section class="view" id="view-help" hidden>
+        <div class="panel">
+          <div class="panel-head">
+            <h2>Help &amp; staff guide</h2>
+            <span class="panel-sub">Step-by-step instructions for new staff</span>
+          </div>
+          <ol class="help-steps" id="helpSteps"></ol>
+        </div>
+      </section>
+
+    </main>
+  </div>
+</div>
+<script src="script.js"></script>
+</body>
+</html>

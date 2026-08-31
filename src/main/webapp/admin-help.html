@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sunrise Dental Clinic — Appointment &amp; Patient Management</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<!-- ======================= TOAST ======================= -->
+<div id="toastHost" class="toast-host" aria-live="polite"></div>
+<!-- ======================= APP SHELL ======================= -->
+<div id="appShell" class="app-shell">
+
+
+    <aside class="sidebar">
+        <div class="sidebar-brand">
+            <svg viewBox="0 0 64 64" width="30" height="30" aria-hidden="true">
+                <circle cx="32" cy="32" r="30" fill="none" stroke="currentColor" stroke-width="2.5"/>
+                <path d="M32 16c-6 0-10 4-10 10 0 8 3 11 3 18 0 3 2 5 4 5s3-2 3-6 1-6 3-6 3 2 3 6 1 6 3 6 4-2 4-5c0-7 3-10 3-18 0-6-4-10-10-10z" fill="currentColor"/>
+            </svg>
+            <div>
+                <strong>Sunrise Dental</strong>
+                <span>Clinic Console</span>
+            </div>
+        </div>
+
+        <nav class="sidebar-nav" id="sidebarNav">
+            <button class="nav-item"><a href="admin-dashboard.html" class="nav-item active">Dashboard</a></button>
+            <button class="nav-item"><a href="users.html" class="nav-item active">Add Users</a>
+            </button>
+            <button class="nav-item"><a href="admin-registerAppoinment.html" class="nav-item active">Register Appointments</a></button>
+            <button class="nav-item" data-view="register"><a href="admin-dentist.html" class="nav-item active">Dentists</a>
+            </button>
+            <button class="nav-item" data-view="register"><a href="admin-treatment.html" class="nav-item active">Treatment</a>
+            </button>
+            <button class="nav-item" data-view="all"><a href="admin-appointments.html" class="nav-item active">Appointments</a>
+            </button>
+
+            <button class="nav-item" data-view="help"><a href="admin-help.html" class="nav-item active">Help</a>
+            </button>
+        </nav>
+
+        <div class="sidebar-footer">
+            <button id="exportBtn" class="btn btn-ghost btn-small btn-block">Export records (.txt)</button>
+            <label class="btn btn-ghost btn-small btn-block file-import">
+                Import records (.txt)
+                <input type="file" id="importFile" accept=".txt,.csv" hidden>
+            </label>
+        </div>
+    </aside>
+
+    <div class="main-col">
+        <header class="topbar">
+            <div class="topbar-title" id="viewTitle">Dashboard</div>
+            <div class="topbar-right">
+                <span class="staff-chip">Signed in as <strong id="staffName">—</strong></span>
+                <button id="exitBtn" class="btn btn-danger-outline btn-small">Exit System</button>
+            </div>
+        </header>
+
+        <!-- ---------- HELP ---------- -->
+        <section class="view" id="view-help" >
+            <div class="panel">
+                <div class="panel-head">
+                    <h2>Help &amp; staff guide</h2>
+                    <span class="panel-sub">Step-by-step instructions for new staff</span>
+                </div>
+                <ol class="help-steps" id="helpSteps"></ol>
+            </div>
+        </section>
+
+    </div>
+</div>
+</body>
+</html>
