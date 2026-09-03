@@ -305,4 +305,43 @@ input,select{font-family:inherit;}
   font-size: 14px !important;
   font-weight: 600 !important;
   text-align: center !important;
+
 }
+/* =========================
+   EDIT USER MODAL
+========================= */
+
+.modal {
+  display: none;
+  position: fixed;
+
+  top: 0;
+  left: 0;
+
+  width: 100vw;
+  height: 100vh;
+
+  background: rgba(0, 0, 0, 0.55);
+
+  z-index: 99999;
+
+  /* Center popup */
+  align-items: center;
+  justify-content: center;
+}
+
+.modal-content {
+  width: 400px;
+  max-width: 90%;
+
+  background: #ffffff;
+
+  padding: 25px;
+
+  border-radius: 12px;
+
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+
+  box-sizing: border-box;
+}
+
