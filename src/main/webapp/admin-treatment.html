@@ -7,6 +7,195 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
+    <style>/* =========================
+      ACTION BUTTONS
+   ========================= */
+
+    .edit-btn,
+    .delete-btn {
+        border: none;
+        padding: 5px 10px;
+        font-size: 12px;
+        border-radius: 5px;
+        cursor: pointer;
+        margin-right: 4px;
+    }
+
+    .edit-btn {
+        background: #3498db;
+        color: white;
+    }
+
+    .edit-btn:hover {
+        background: #2980b9;
+    }
+
+    .delete-btn {
+        background: #e74c3c;
+        color: white;
+    }
+
+    .delete-btn:hover {
+        background: #c0392b;
+    }
+
+
+    /* =========================
+       EDIT USER MODAL
+    ========================= */
+
+    .modal {
+        display: none;
+
+        position: fixed;
+
+        top: 0;
+        left: 0;
+
+        width: 100%;
+        height: 100%;
+
+        background: rgba(0, 0, 0, 0.55);
+
+        z-index: 99999;
+
+        align-items: center;
+        justify-content: center;
+    }
+
+
+    .modal-content {
+        background: #ffffff;
+
+        width: 420px;
+        max-width: 90%;
+
+        padding: 25px;
+
+        border-radius: 12px;
+
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+
+        animation: modalOpen 0.2s ease;
+    }
+
+
+    @keyframes modalOpen {
+
+        from {
+            opacity: 0;
+            transform: scale(0.95);
+        }
+
+        to {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+    }
+
+
+    .modal-header {
+        display: flex;
+
+        justify-content: space-between;
+        align-items: center;
+
+        margin-bottom: 20px;
+    }
+
+
+    .modal-header h2 {
+        margin: 0;
+    }
+
+
+    .close {
+        font-size: 28px;
+
+        cursor: pointer;
+
+        color: #777;
+    }
+
+
+    .close:hover {
+        color: #000;
+    }
+
+
+    .modal-content label {
+        display: block;
+
+        margin-top: 12px;
+        margin-bottom: 5px;
+
+        font-weight: 600;
+    }
+
+
+    .modal-content input {
+        width: 100%;
+
+        padding: 10px;
+
+        border: 1px solid #ccc;
+
+        border-radius: 6px;
+
+        box-sizing: border-box;
+
+        font-family: inherit;
+    }
+
+
+    .modal-content input:focus {
+        outline: none;
+
+        border-color: #3498db;
+    }
+
+
+    .modal-buttons {
+        display: flex;
+
+        justify-content: flex-end;
+
+        gap: 10px;
+
+        margin-top: 22px;
+    }
+
+
+    .modal-buttons button {
+        padding: 9px 15px;
+
+        border: none;
+
+        border-radius: 6px;
+
+        cursor: pointer;
+    }
+
+
+    .modal-buttons button[type="button"] {
+        background: #e5e5e5;
+
+        color: #333;
+    }
+
+
+    .modal-buttons button[type="submit"] {
+        background: #3498db;
+
+        color: white;
+    }
+
+
+    .modal-buttons button[type="submit"]:hover {
+        background: #2980b9;
+    }
+    </style>
 </head>
 <body>
 
@@ -84,7 +273,6 @@
 
                     </label>
 
-                    <!-- CONTACT -->
                     <label class="field">
                         <span class="field-label">Charge *</span>
 
@@ -107,7 +295,7 @@
 
                         <button type="submit"
                                 class="btn btn-primary">
-                            Register User
+                            Add Treatment
                         </button>
 
                     </div>
@@ -115,8 +303,564 @@
                 </form>
             </div>
         </section>
+        <!-- ===================== ALL USERS ===================== -->
+
+        <section class="view" id="view-all">
+
+            <div class="panel">
+
+                <div class="panel-head">
+
+                    <h2>All Treatment</h2>
+
+                    <span class="panel-sub"
+                          id="allCount">
+                0 records
+            </span>
+
+                </div>
+
+                <div class="table-wrap">
+
+                    <table class="data-table">
+
+                        <thead>
+
+                        <tr>
+
+                            <th>Name</th>
+
+
+                            <th>Charge</th>
+
+                            <th>Action</th>
+
+                        </tr>
+
+                        </thead>
+
+                        <tbody id="allTableBody">
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+            </div>
+
+        </section>
+
 
     </div>
+
+
 </div>
+
+
+
+<!-- =====================================================
+     EDIT USER POPUP
+===================================================== -->
+<div id="editModal" class="modal">
+
+    <div class="modal-content">
+
+        <div class="modal-header">
+
+            <h2>Edit Treatment</h2>
+
+            <span class="close"
+                  onclick="closeEditModal()">
+                &times;
+            </span>
+
+        </div>
+
+
+        <form id="editTreatmentForm">
+
+            <input type="hidden"
+                   id="editId">
+
+
+            <!-- NAME -->
+            <label for="editFullName">
+                Full Name
+            </label>
+
+            <input type="text"
+                   id="editFullName"
+                   required>
+
+
+
+
+
+            <!-- CHARGE -->
+            <label for="editCharge">
+                Charge
+            </label>
+
+            <input type="number"
+                   id="editCharge"
+                   required>
+
+
+            <div class="modal-buttons">
+
+                <button type="button"
+                        onclick="closeEditModal()">
+                    Cancel
+                </button>
+
+                <button type="submit">
+                    Update Treatment
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+</div>
+</div>
+
+
+
+<!-- ===================== JAVASCRIPT ===================== -->
+
+<script>
+
+    document.addEventListener("DOMContentLoaded", function () {
+
+        loadTreatment();
+
+        const editForm =
+            document.getElementById("editTreatmentForm");
+
+        editForm.addEventListener(
+            "submit",
+            updateTreatment
+        );
+
+    });
+
+
+    /* =====================================================
+       LOAD TREATMENTS
+    ===================================================== */
+
+    function loadTreatment() {
+
+        console.log("Loading treatments...");
+
+        fetch("/Sunrise-Dental/displaytreatment")
+
+            .then(response => {
+
+                console.log(
+                    "Response status:",
+                    response.status
+                );
+
+                if (!response.ok) {
+
+                    throw new Error(
+                        "Server error: " +
+                        response.status
+                    );
+                }
+
+                return response.json();
+            })
+
+            .then(data => {
+
+                console.log(
+                    "Treatment data:",
+                    data
+                );
+
+                const tbody =
+                    document.getElementById(
+                        "allTableBody"
+                    );
+
+                const count =
+                    document.getElementById(
+                        "allCount"
+                    );
+
+                tbody.innerHTML = "";
+
+                count.textContent =
+                    data.length + " records";
+
+
+                // NO DATA
+                if (data.length === 0) {
+
+                    tbody.innerHTML = `
+                    <tr>
+                        <td colspan="3"
+                            style="text-align:center;">
+                            No Treatments Found
+                        </td>
+                    </tr>
+                `;
+
+                    return;
+                }
+
+
+                // DISPLAY TREATMENT
+                data.forEach(treatment => {
+
+                    const row =
+                        document.createElement("tr");
+
+
+                    row.innerHTML = `
+
+                    <td>
+                        ${treatment.name}
+                    </td>
+
+
+
+                    <td>
+                        ${treatment.charge}
+                    </td>
+
+                    <td>
+
+                        <button
+                            type="button"
+                            class="edit-btn"
+                            onclick='editTreatment(${JSON.stringify(treatment)})'>
+                            Edit
+                        </button>
+
+                        <button
+                            type="button"
+                            class="delete-btn"
+                            onclick="deleteTreatment(${treatment.id})">
+                            Delete
+                        </button>
+
+                    </td>
+
+                `;
+
+                    tbody.appendChild(row);
+
+                });
+
+            })
+
+            .catch(error => {
+
+                console.error(
+                    "Load tratments error:",
+                    error
+                );
+
+                document.getElementById(
+                    "allTableBody"
+                ).innerHTML = `
+
+                <tr>
+
+                    <td colspan="4"
+                        style="text-align:center;color:red;">
+
+                        Failed to load treatments
+
+                    </td>
+
+                </tr>
+
+            `;
+            });
+    }
+
+    /* =====================================================
+       OPEN EDIT POPUP
+    ===================================================== */
+
+    function editTreatment(treatment) {
+
+        document.getElementById(
+            "editId"
+        ).value = treatment.id;
+
+
+        document.getElementById(
+            "editFullName"
+        ).value = treatment.name;
+
+
+
+
+
+        document.getElementById(
+            "editCharge"
+        ).value = treatment.charge;
+
+
+        document.getElementById(
+            "editModal"
+        ).style.display = "flex";
+    }
+
+
+    /* =====================================================
+       CLOSE EDIT POPUP
+    ===================================================== */
+
+    function closeEditModal() {
+
+        document.getElementById(
+            "editModal"
+        ).style.display = "none";
+    }
+
+
+    /* =====================================================
+       UPDATE Treatment
+    ===================================================== */
+
+    function updateTreatment(e) {
+
+        e.preventDefault();
+
+
+        const id =
+            document.getElementById(
+                "editId"
+            ).value;
+
+
+        const name =
+            document.getElementById(
+                "editFullName"
+            ).value;
+
+
+
+
+
+        const charge =
+            document.getElementById(
+                "editCharge"
+            ).value;
+
+
+        const data =
+            new URLSearchParams();
+
+
+        data.append(
+            "id",
+            id
+        );
+
+        data.append(
+            "name",
+            name
+        );
+
+
+
+        data.append(
+            "charge",
+            charge
+        );
+
+
+        fetch(
+            "/Sunrise-Dental/updateTreatment",
+            {
+
+                method: "POST",
+
+                headers: {
+
+                    "Content-Type":
+                        "application/x-www-form-urlencoded"
+
+                },
+
+                body: data
+
+            }
+        )
+
+            .then(response =>
+                response.text()
+            )
+
+            .then(result => {
+
+                console.log(
+                    "Update result:",
+                    result
+                );
+
+
+                if (
+                    result.trim() ===
+                    "success"
+                ) {
+
+                    alert(
+                        "Treatment updated successfully!"
+                    );
+
+
+                    closeEditModal();
+
+
+                    loadTreatment();
+
+                } else {
+
+                    alert(
+                        "Failed to update Treatment."
+                    );
+                }
+
+            })
+
+            .catch(error => {
+
+                console.error(
+                    "Update error:",
+                    error
+                );
+
+                alert(
+                    "Error updating Treatment."
+                );
+            });
+    }
+
+
+    /* =====================================================
+       DELETE Treatment
+    ===================================================== */
+
+    function deleteTreatment(id) {
+
+        const confirmDelete =
+            confirm(
+                "Are you sure you want to delete this Treatment?"
+            );
+
+
+        if (!confirmDelete) {
+
+            return;
+        }
+
+
+        const data =
+            new URLSearchParams();
+
+
+        data.append(
+            "id",
+            id
+        );
+
+
+        fetch(
+            "/Sunrise-Dental/deleteTreatment",
+            {
+
+                method: "POST",
+
+                headers: {
+
+                    "Content-Type":
+                        "application/x-www-form-urlencoded"
+
+                },
+
+                body: data
+
+            }
+        )
+
+            .then(response =>
+                response.text()
+            )
+
+            .then(result => {
+
+                console.log(
+                    "Delete result:",
+                    result
+                );
+
+
+                if (
+                    result.trim() ===
+                    "success"
+                ) {
+
+                    alert(
+                        "Treatment deleted successfully!"
+                    );
+
+
+                    loadTreatment();
+
+                } else {
+
+                    alert(
+                        "Failed to delete Treatment."
+                    );
+                }
+
+            })
+
+            .catch(error => {
+
+                console.error(
+                    "Delete error:",
+                    error
+                );
+
+                alert(
+                    "Error deleting Treatment."
+                );
+            });
+    }
+
+
+    /* =====================================================
+       CLOSE MODAL WHEN CLICKING OUTSIDE
+    ===================================================== */
+
+    document.getElementById(
+        "editModal"
+    ).addEventListener(
+        "click",
+        function(e) {
+
+            if (e.target === this) {
+
+                closeEditModal();
+
+            }
+
+        }
+    );
+
+</script>
 </body>
 </html>
