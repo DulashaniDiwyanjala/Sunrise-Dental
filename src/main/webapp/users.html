@@ -1,153 +1,1348 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Manage Users</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Manage Users</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;600&display=swap"
+        rel="stylesheet">
+
+  <link rel="stylesheet" href="style.css">
+
+  <style>
+
+    /* =========================
+       ACTION BUTTONS
+    ========================= */
+
+    .edit-btn,
+    .delete-btn {
+      border: none;
+      padding: 5px 10px;
+      font-size: 12px;
+      border-radius: 5px;
+      cursor: pointer;
+      margin-right: 4px;
+    }
+
+    .edit-btn {
+      background: #3498db;
+      color: white;
+    }
+
+    .edit-btn:hover {
+      background: #2980b9;
+    }
+
+    .delete-btn {
+      background: #e74c3c;
+      color: white;
+    }
+
+    .delete-btn:hover {
+      background: #c0392b;
+    }
+
+
+    /* =========================
+       EDIT USER MODAL
+    ========================= */
+
+    .modal {
+      display: none;
+
+      position: fixed;
+
+      top: 0;
+      left: 0;
+
+      width: 100%;
+      height: 100%;
+
+      background: rgba(0, 0, 0, 0.55);
+
+      z-index: 99999;
+
+      align-items: center;
+      justify-content: center;
+    }
+
+
+    .modal-content {
+      background: #ffffff;
+
+      width: 420px;
+      max-width: 90%;
+
+      padding: 25px;
+
+      border-radius: 12px;
+
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+
+      animation: modalOpen 0.2s ease;
+    }
+
+
+    @keyframes modalOpen {
+
+      from {
+        opacity: 0;
+        transform: scale(0.95);
+      }
+
+      to {
+        opacity: 1;
+        transform: scale(1);
+      }
+
+    }
+
+
+    .modal-header {
+      display: flex;
+
+      justify-content: space-between;
+      align-items: center;
+
+      margin-bottom: 20px;
+    }
+
+
+    .modal-header h2 {
+      margin: 0;
+    }
+
+
+    .close {
+      font-size: 28px;
+
+      cursor: pointer;
+
+      color: #777;
+    }
+
+
+    .close:hover {
+      color: #000;
+    }
+
+
+    .modal-content label {
+      display: block;
+
+      margin-top: 12px;
+      margin-bottom: 5px;
+
+      font-weight: 600;
+    }
+
+
+    .modal-content input {
+      width: 100%;
+
+      padding: 10px;
+
+      border: 1px solid #ccc;
+
+      border-radius: 6px;
+
+      box-sizing: border-box;
+
+      font-family: inherit;
+    }
+
+
+    .modal-content input:focus {
+      outline: none;
+
+      border-color: #3498db;
+    }
+
+
+    .modal-buttons {
+      display: flex;
+
+      justify-content: flex-end;
+
+      gap: 10px;
+
+      margin-top: 22px;
+    }
+
+
+    .modal-buttons button {
+      padding: 9px 15px;
+
+      border: none;
+
+      border-radius: 6px;
+
+      cursor: pointer;
+    }
+
+
+    .modal-buttons button[type="button"] {
+      background: #e5e5e5;
+
+      color: #333;
+    }
+
+
+    .modal-buttons button[type="submit"] {
+      background: #3498db;
+
+      color: white;
+    }
+
+
+    .modal-buttons button[type="submit"]:hover {
+      background: #2980b9;
+    }
+
+  </style>
+
 </head>
+
+
 <body>
 
-<!-- ======================= TOAST ======================= -->
-<div id="toastHost" class="toast-host" aria-live="polite"></div>
-<!-- ======================= APP SHELL ======================= -->
-<div id="appShell" class="app-shell">
 
+<!-- ===================== TOAST ===================== -->
+
+<div id="toastHost"
+     class="toast-host"
+     aria-live="polite">
+</div>
+
+
+
+<!-- ===================== APP SHELL ===================== -->
+
+<div id="appShell"
+     class="app-shell">
+
+
+  <!-- ===================== SIDEBAR ===================== -->
 
   <aside class="sidebar">
+
+
     <div class="sidebar-brand">
-      <svg viewBox="0 0 64 64" width="30" height="30" aria-hidden="true">
-        <circle cx="32" cy="32" r="30" fill="none" stroke="currentColor" stroke-width="2.5"/>
-        <path d="M32 16c-6 0-10 4-10 10 0 8 3 11 3 18 0 3 2 5 4 5s3-2 3-6 1-6 3-6 3 2 3 6 1 6 3 6 4-2 4-5c0-7 3-10 3-18 0-6-4-10-10-10z" fill="currentColor"/>
+
+      <svg viewBox="0 0 64 64"
+           width="30"
+           height="30"
+           aria-hidden="true">
+
+        <circle cx="32"
+                cy="32"
+                r="30"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2.5"/>
+
+        <path d="M32 16c-6 0-10 4-10 10 0 8 3 11 3 18 0 3 2 5 4 5s3-2 3-6 1-6 3-6 3 2 3 6 1 6 3 6 4-2 4-5c0-7 3-10 3-18 0-6-4-10-10-10z"
+              fill="currentColor"/>
+
       </svg>
+
+
       <div>
+
         <strong>Sunrise Dental</strong>
+
         <span>Clinic Console</span>
+
       </div>
+
     </div>
 
-    <nav class="sidebar-nav" id="sidebarNav">
-      <button class="nav-item"><a href="admin-dashboard.html" class="nav-item active">Dashboard</a></button>
-      <button class="nav-item"><a href="users.html" class="nav-item active">Add Users</a>
-      </button>
-      <button class="nav-item"><a href="admin-registerAppoinment.html" class="nav-item active">Register Appointments</a></button>
-      <button class="nav-item" data-view="register"><a href="admin-dentist.html" class="nav-item active">Dentists</a>
-      </button>
-      <button class="nav-item" data-view="register"><a href="admin-treatment.html" class="nav-item active">Treatment</a>
-      </button>
-      <button class="nav-item" data-view="all"><a href="admin-appointments.html" class="nav-item active">Appointments</a>
+
+
+    <!-- ===================== NAVIGATION ===================== -->
+
+    <nav class="sidebar-nav"
+         id="sidebarNav">
+
+
+      <button class="nav-item">
+
+        <a href="admin-dashboard.html"
+           class="nav-item">
+
+          Dashboard
+
+        </a>
+
       </button>
 
-      <button class="nav-item" data-view="help"><a href="admin-help.html" class="nav-item active">Help</a>
+
+      <button class="nav-item">
+
+        <a href="users.html"
+           class="nav-item active">
+
+          Add Users
+
+        </a>
+
       </button>
+
+
+      <button class="nav-item">
+
+        <a href="admin-registerAppoinment.html"
+           class="nav-item">
+
+          Register Appointments
+
+        </a>
+
+      </button>
+
+
+      <button class="nav-item">
+
+        <a href="admin-dentist.html"
+           class="nav-item">
+
+          Dentists
+
+        </a>
+
+      </button>
+
+
+      <button class="nav-item">
+
+        <a href="admin-treatment.html"
+           class="nav-item">
+
+          Treatment
+
+        </a>
+
+      </button>
+
+
+      <button class="nav-item">
+
+        <a href="admin-appointments.html"
+           class="nav-item">
+
+          Appointments
+
+        </a>
+
+      </button>
+
+
+      <button class="nav-item">
+
+        <a href="admin-help.html"
+           class="nav-item">
+
+          Help
+
+        </a>
+
+      </button>
+
+
     </nav>
 
+
+
+    <!-- ===================== SIDEBAR FOOTER ===================== -->
+
     <div class="sidebar-footer">
-      <button id="exportBtn" class="btn btn-ghost btn-small btn-block">Export records (.txt)</button>
+
+
+      <button id="exportBtn"
+              class="btn btn-ghost btn-small btn-block">
+
+        Export records (.txt)
+
+      </button>
+
+
       <label class="btn btn-ghost btn-small btn-block file-import">
+
         Import records (.txt)
-        <input type="file" id="importFile" accept=".txt,.csv" hidden>
+
+        <input type="file"
+               id="importFile"
+               accept=".txt,.csv"
+               hidden>
+
       </label>
+
+
     </div>
+
+
   </aside>
 
-<div class="main-col">
+
+
+  <!-- ===================== MAIN COLUMN ===================== -->
+
+  <div class="main-col">
+
+
+    <!-- ===================== TOP BAR ===================== -->
+
     <header class="topbar">
-      <div class="topbar-title" id="viewTitle">Dashboard</div>
-      <div class="topbar-right">
-        <span class="staff-chip">Signed in as <strong id="staffName">—</strong></span>
-        <button id="exitBtn" class="btn btn-danger-outline btn-small">Exit System</button>
+
+
+      <div class="topbar-title"
+           id="viewTitle">
+
+        Manage Users
+
       </div>
+
+
+      <div class="topbar-right">
+
+
+                <span class="staff-chip">
+
+                    Signed in as
+
+                    <strong id="staffName">
+                        —
+                    </strong>
+
+                </span>
+
+
+        <button id="exitBtn"
+                class="btn btn-danger-outline btn-small">
+
+          Exit System
+
+        </button>
+
+
+      </div>
+
+
     </header>
-  
-    <!-- ---------- REGISTER ---------- -->
-      <section class="view" id="view-register">
-        <div class="panel">
-          <div class="panel-head">
-            <h2>Register new User</h2>
-            <span class="panel-sub">Next number: <span class="mono" id="nextApptNo">—</span></span>
+
+
+
+    <!-- ===================== REGISTER USER ===================== -->
+
+    <section class="view"
+             id="view-register">
+
+
+      <div class="panel">
+
+
+        <div class="panel-head">
+
+
+          <h2>
+            Register new User
+          </h2>
+
+
+          <span class="panel-sub">
+
+                        Next number:
+
+                        <span class="mono"
+                              id="nextApptNo">
+
+                            —
+
+                        </span>
+
+                    </span>
+
+
+        </div>
+
+
+
+        <form action="/Sunrise-Dental/register"
+              method="POST"
+              class="grid-form">
+
+
+          <!-- FULL NAME -->
+
+          <label class="field">
+
+                        <span class="field-label">
+                            Full Name *
+                        </span>
+
+
+            <input type="text"
+                   id="fullName"
+                   name="fullName"
+                   placeholder="e.g. Kavindi Rathnayake"
+                   required>
+
+          </label>
+
+
+
+          <!-- USERNAME -->
+
+          <label class="field">
+
+                        <span class="field-label">
+                            Username *
+                        </span>
+
+
+            <input type="text"
+                   id="username"
+                   name="username"
+                   placeholder="Enter username"
+                   required>
+
+          </label>
+
+
+
+          <!-- EMAIL -->
+
+          <label class="field">
+
+                        <span class="field-label">
+                            Email *
+                        </span>
+
+
+            <input type="email"
+                   id="email"
+                   name="email"
+                   placeholder="example@gmail.com"
+                   required>
+
+          </label>
+
+
+
+          <!-- PASSWORD -->
+
+          <label class="field">
+
+                        <span class="field-label">
+                            Password *
+                        </span>
+
+
+            <input type="password"
+                   id="password"
+                   name="password"
+                   placeholder="Enter password"
+                   required>
+
+          </label>
+
+
+
+          <!-- BUTTONS -->
+
+          <div class="form-actions field-wide">
+
+
+            <button type="reset"
+                    class="btn btn-ghost">
+
+              Clear Form
+
+            </button>
+
+
+            <button type="submit"
+                    class="btn btn-primary">
+
+              Register User
+
+            </button>
+
+
           </div>
 
-          <form action="/Sunrise-Dental/register" method="POST" class="grid-form">
 
-            <!-- FULL NAME -->
-            <label class="field">
-              <span class="field-label">Full Name *</span>
+        </form>
 
-              <input type="text"
-                     id="fullName"
-                     name="fullName"
-                     placeholder="e.g. Kavindi Rathnayake"
-                     required>
-
-            </label>
-
-
-
-
-
-            <!-- USERNAME -->
-            <label class="field">
-              <span class="field-label">Username *</span>
-
-              <input type="text"
-                     id="username"
-                     name="username"
-                     placeholder="Enter username"
-                     required>
-
-            </label>
-
-
-            <!-- EMAIL -->
-            <label class="field">
-              <span class="field-label">Email *</span>
-
-              <input type="email"
-                     id="email"
-                     name="email"
-                     placeholder="example@gmail.com"
-                     required>
-
-            </label>
-
-
-
-            <!-- PASSWORD -->
-            <label class="field">
-              <span class="field-label">Password *</span>
-
-              <input type="password"
-                     id="password"
-                     name="password"
-                     placeholder="Enter password"
-                     required>
-
-            </label>
-
-
-            <!-- BUTTONS -->
-            <div class="form-actions field-wide">
-
-              <button type="reset"
-                      class="btn btn-ghost">
-                Clear Form
-              </button>
-
-              <button type="submit"
-                      class="btn btn-primary">
-                Register User
-              </button>
-
-            </div>
-
-          </form>
-        </div>
-      </section>
 
       </div>
+
+
+    </section>
+
+
+
+    <!-- ===================== ALL USERS ===================== -->
+
+    <section class="view"
+             id="view-all">
+
+
+      <div class="panel">
+
+
+        <div class="panel-head">
+
+
+          <h2>
+            All Users
+          </h2>
+
+
+          <span class="panel-sub"
+                id="allCount">
+
+                        0 records
+
+                    </span>
+
+
+        </div>
+
+
+
+        <div class="table-wrap">
+
+
+          <table class="data-table">
+
+
+            <thead>
+
+
+            <tr>
+
+              <th>User No.</th>
+
+              <th>Full Name</th>
+
+              <th>Email</th>
+
+              <th>Username</th>
+
+              <th>Password</th>
+
+              <th>Action</th>
+
+            </tr>
+
+
+            </thead>
+
+
+
+            <tbody id="allTableBody">
+
+            </tbody>
+
+
+          </table>
+
+
+        </div>
+
+
+      </div>
+
+
+    </section>
+
+
+  </div>
+
+
 </div>
+
+
+
+<!-- =====================================================
+     EDIT USER POPUP
+===================================================== -->
+
+<div id="editModal"
+     class="modal">
+
+
+  <div class="modal-content">
+
+
+    <div class="modal-header">
+
+
+      <h2>
+        Edit User
+      </h2>
+
+
+      <span class="close"
+            onclick="closeEditModal()">
+
+                &times;
+
+            </span>
+
+
+    </div>
+
+
+
+    <form id="editUserForm">
+
+
+      <input type="hidden"
+             id="editId">
+
+
+
+      <!-- FULL NAME -->
+
+      <label for="editFullName">
+
+        Full Name
+
+      </label>
+
+
+      <input type="text"
+             id="editFullName"
+             required>
+
+
+
+      <!-- EMAIL -->
+
+      <label for="editEmail">
+
+        Email
+
+      </label>
+
+
+      <input type="email"
+             id="editEmail"
+             required>
+
+
+
+      <!-- USERNAME -->
+
+      <label for="editUsername">
+
+        Username
+
+      </label>
+
+
+      <input type="text"
+             id="editUsername"
+             required>
+
+
+
+      <!-- PASSWORD -->
+
+      <label for="editPassword">
+
+        Password
+
+      </label>
+
+
+      <input type="text"
+             id="editPassword"
+             required>
+
+
+
+      <!-- BUTTONS -->
+
+      <div class="modal-buttons">
+
+
+        <button type="button"
+                onclick="closeEditModal()">
+
+          Cancel
+
+        </button>
+
+
+        <button type="submit">
+
+          Update User
+
+        </button>
+
+
+      </div>
+
+
+    </form>
+
+
+  </div>
+
+
+</div>
+
+
+
+<!-- ===================== JAVASCRIPT ===================== -->
+
+<script>
+
+
+  document.addEventListener("DOMContentLoaded", function () {
+
+    loadUsers();
+
+
+    const editForm =
+            document.getElementById("editUserForm");
+
+
+    editForm.addEventListener(
+            "submit",
+            updateUser
+    );
+
+  });
+
+
+
+  /* =====================================================
+     LOAD USERS
+  ===================================================== */
+
+  function loadUsers() {
+
+
+    const url =
+            "/Sunrise-Dental/users";
+
+
+    fetch(url)
+
+
+            .then(response => {
+
+
+              if (!response.ok) {
+
+                throw new Error(
+                        "Server error: " +
+                        response.status
+                );
+
+              }
+
+
+              return response.json();
+
+            })
+
+
+            .then(data => {
+
+
+              const tbody =
+                      document.getElementById(
+                              "allTableBody"
+                      );
+
+
+              tbody.innerHTML = "";
+
+
+              document.getElementById(
+                      "allCount"
+              ).textContent =
+                      data.length + " records";
+
+
+
+              if (data.length === 0) {
+
+
+                tbody.innerHTML = `
+
+                    <tr>
+
+                        <td colspan="6"
+                            style="text-align:center;">
+
+                            No Users found
+
+                        </td>
+
+                    </tr>
+
+                `;
+
+
+                return;
+
+              }
+
+
+
+              data.forEach(user => {
+
+
+                const row =
+                        document.createElement("tr");
+
+
+
+                row.innerHTML = `
+
+                    <td>
+                        ${user.id}
+                    </td>
+
+                    <td>
+                        ${user.fullname}
+                    </td>
+
+                    <td>
+                        ${user.email}
+                    </td>
+
+                    <td>
+                        ${user.username}
+                    </td>
+
+                    <td>
+                        ${user.password}
+                    </td>
+
+                    <td>
+
+                        <button
+                            type="button"
+                            class="edit-btn"
+                            onclick='editUser(${JSON.stringify(user)})'>
+
+                            Edit
+
+                        </button>
+
+
+                        <button
+                            type="button"
+                            class="delete-btn"
+                            onclick="deleteUser(${user.id})">
+
+                            Delete
+
+                        </button>
+
+                    </td>
+
+                `;
+
+
+                tbody.appendChild(row);
+
+              });
+
+
+            })
+
+
+            .catch(error => {
+
+
+              console.error(
+                      "Load users error:",
+                      error
+              );
+
+
+              document.getElementById(
+                      "allTableBody"
+              ).innerHTML = `
+
+                <tr>
+
+                    <td colspan="6"
+                        style="text-align:center;color:red;">
+
+                        Failed to load users
+
+                    </td>
+
+                </tr>
+
+            `;
+
+            });
+
+  }
+
+
+
+  /* =====================================================
+     OPEN EDIT POPUP
+  ===================================================== */
+
+  function editUser(user) {
+
+
+    document.getElementById(
+            "editId"
+    ).value =
+            user.id;
+
+
+    document.getElementById(
+            "editFullName"
+    ).value =
+            user.fullname;
+
+
+    document.getElementById(
+            "editEmail"
+    ).value =
+            user.email;
+
+
+    document.getElementById(
+            "editUsername"
+    ).value =
+            user.username;
+
+
+    document.getElementById(
+            "editPassword"
+    ).value =
+            user.password;
+
+
+    document.getElementById(
+            "editModal"
+    ).style.display =
+            "flex";
+
+  }
+
+
+
+  /* =====================================================
+     CLOSE EDIT POPUP
+  ===================================================== */
+
+  function closeEditModal() {
+
+
+    document.getElementById(
+            "editModal"
+    ).style.display =
+            "none";
+
+  }
+
+
+
+  /* =====================================================
+     UPDATE USER
+  ===================================================== */
+
+  function updateUser(e) {
+
+
+    e.preventDefault();
+
+
+
+    const id =
+            document.getElementById(
+                    "editId"
+            ).value;
+
+
+    const fullname =
+            document.getElementById(
+                    "editFullName"
+            ).value;
+
+
+    const email =
+            document.getElementById(
+                    "editEmail"
+            ).value;
+
+
+    const username =
+            document.getElementById(
+                    "editUsername"
+            ).value;
+
+
+    const password =
+            document.getElementById(
+                    "editPassword"
+            ).value;
+
+
+
+    const data =
+            new URLSearchParams();
+
+
+    data.append(
+            "id",
+            id
+    );
+
+
+    data.append(
+            "fullname",
+            fullname
+    );
+
+
+    data.append(
+            "email",
+            email
+    );
+
+
+    data.append(
+            "username",
+            username
+    );
+
+
+    data.append(
+            "password",
+            password
+    );
+
+
+
+    fetch(
+            "/Sunrise-Dental/updateUser",
+            {
+
+              method: "POST",
+
+              headers: {
+
+                "Content-Type":
+                        "application/x-www-form-urlencoded"
+
+              },
+
+              body: data
+
+            }
+    )
+
+
+            .then(response =>
+                    response.text()
+            )
+
+
+            .then(result => {
+
+
+              if (
+                      result.trim() ===
+                      "success"
+              ) {
+
+
+                alert(
+                        "User updated successfully!"
+                );
+
+
+                closeEditModal();
+
+
+                loadUsers();
+
+
+              } else {
+
+
+                alert(
+                        "Failed to update user."
+                );
+
+              }
+
+            })
+
+
+            .catch(error => {
+
+
+              console.error(
+                      "Update error:",
+                      error
+              );
+
+
+              alert(
+                      "Error updating user."
+              );
+
+            });
+
+  }
+
+
+
+  /* =====================================================
+     DELETE USER
+  ===================================================== */
+
+  function deleteUser(id) {
+
+
+    const confirmDelete =
+            confirm(
+                    "Are you sure you want to delete this user?"
+            );
+
+
+    if (!confirmDelete) {
+
+      return;
+
+    }
+
+
+
+    const data =
+            new URLSearchParams();
+
+
+    data.append(
+            "id",
+            id
+    );
+
+
+
+    fetch(
+            "/Sunrise-Dental/deleteUser",
+            {
+
+              method: "POST",
+
+              headers: {
+
+                "Content-Type":
+                        "application/x-www-form-urlencoded"
+
+              },
+
+              body: data
+
+            }
+    )
+
+
+            .then(response =>
+                    response.text()
+            )
+
+
+            .then(result => {
+
+
+              if (
+                      result.trim() ===
+                      "success"
+              ) {
+
+
+                alert(
+                        "User deleted successfully!"
+                );
+
+
+                loadUsers();
+
+
+              } else {
+
+
+                alert(
+                        "Failed to delete user."
+                );
+
+              }
+
+            })
+
+
+            .catch(error => {
+
+
+              console.error(
+                      "Delete error:",
+                      error
+              );
+
+
+              alert(
+                      "Error deleting user."
+              );
+
+            });
+
+  }
+
+
+
+  /* =====================================================
+     CLOSE MODAL WHEN CLICKING OUTSIDE
+  ===================================================== */
+
+  document.getElementById(
+          "editModal"
+  ).addEventListener(
+          "click",
+          function(e) {
+
+
+            if (
+                    e.target ===
+                    this
+            ) {
+
+              closeEditModal();
+
+            }
+
+          }
+  );
+
+
+</script>
+
+
 </body>
+
 </html>
